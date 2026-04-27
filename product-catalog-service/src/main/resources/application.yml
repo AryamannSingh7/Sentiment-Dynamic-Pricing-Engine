@@ -1,0 +1,41 @@
+spring:
+  application:
+    name: product-catalog-service
+
+  data:
+    mongodb:
+      uri: ${MONGODB_URI:mongodb://localhost:27017/pricing_db}
+      auto-index-creation: true
+
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    consumer:
+      group-id: pricing-updater-group
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+
+server:
+  port: ${SERVER_PORT:8080}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+pricing:
+  # Set KAFKA_ENABLED=false to run without Kafka (Phase 1 testing)
+  kafka:
+    enabled: ${KAFKA_ENABLED:true}
+    topics:
+      raw-sentiment-events: raw-sentiment-events
+      price-adjustment-events: price-adjustment-events
+  # Minimum seconds between price updates for the same product
+  cooldown-seconds: ${PRICING_COOLDOWN_SECONDS:30}
