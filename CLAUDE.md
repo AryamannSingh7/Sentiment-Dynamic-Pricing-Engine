@@ -9,15 +9,17 @@
 ### Phase completion state
 | Phase | Status | Description |
 |---|---|---|
-| Phase 1 — Spring Boot + MongoDB | **Code complete, not yet tested** | All files written, initial commit pushed to GitHub |
+| Phase 1 — Spring Boot + MongoDB | **Complete and tested** | All 12 unit tests green, all REST API checks passed |
 | Phase 2 — Kafka + Event Simulator | Code complete, not yet tested | docker-compose.yml + simulator.py written |
 | Phase 3 — AI Sentiment Consumer | Code complete, not yet tested | Python LLM pipeline written |
 | Phase 4 — Dynamic Pricing Updater | Code complete, not yet tested | Kafka consumer + optimistic lock in Spring Boot |
 | Phase 5 — Full Docker Compose | Code complete, not yet tested | All services wired in docker-compose.yml |
 
 ### What to do in the next session
-**Resume Phase 1 testing.** The user just installed Java 17, Maven, Docker Desktop, and
-Python 3.11 and restarted their machine. Pick up with the Phase 1 test sequence below.
+**Start Phase 2 testing.** Phase 1 is complete. Phase 2 brings up the full Kafka stack
+(Zookeeper + Kafka via docker-compose) and runs the Python event simulator to produce
+raw sentiment events onto the `raw-sentiment-events` topic. Verify events are produced
+and consumed correctly before moving to Phase 3.
 
 ---
 
