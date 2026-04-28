@@ -7,10 +7,14 @@ ADJUSTMENT_TOPIC         = "price-adjustment-events"
 POLL_INTERVAL_MS         = int(os.getenv("AI_CONSUMER_POLL_INTERVAL_MS", "1000"))
 
 OPENAI_API_KEY           = os.getenv("OPENAI_API_KEY", "")
-OPENAI_MODEL             = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+OPENAI_BASE_URL          = os.getenv("OPENAI_BASE_URL", "")   # empty = standard OpenAI
+OPENAI_MODEL             = os.getenv("OPENAI_MODEL", "meta-llama/llama-3.2-3b-instruct:free")
 
 OLLAMA_BASE_URL          = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
 OLLAMA_MODEL             = os.getenv("OLLAMA_MODEL", "llama3")
 
 # Use OpenAI if key is present, otherwise fall back to Ollama
 USE_OPENAI = bool(OPENAI_API_KEY)
+
+# Set MOCK_LLM=true to skip real LLM calls (useful for pipeline testing)
+MOCK_LLM = os.getenv("MOCK_LLM", "false").lower() == "true"

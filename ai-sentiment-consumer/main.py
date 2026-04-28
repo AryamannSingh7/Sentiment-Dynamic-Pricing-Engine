@@ -56,8 +56,11 @@ def main():
     consumer = build_consumer()
     consumer.subscribe([config.RAW_TOPIC])
     log.info("Subscribed to '%s' as group '%s'", config.RAW_TOPIC, config.CONSUMER_GROUP)
-    log.info("LLM backend: %s", "OpenAI " + config.OPENAI_MODEL if config.USE_OPENAI
-             else "Ollama " + config.OLLAMA_MODEL)
+    if config.MOCK_LLM:
+        log.info("LLM backend: MOCK (deterministic, no external calls)")
+    else:
+        log.info("LLM backend: %s", "OpenAI " + config.OPENAI_MODEL if config.USE_OPENAI
+                 else "Ollama " + config.OLLAMA_MODEL)
 
     processed = 0
     try:

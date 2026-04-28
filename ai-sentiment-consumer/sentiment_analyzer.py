@@ -80,11 +80,13 @@ def build_prompt(event: dict) -> str:
 
 def _call_openai(prompt: str) -> Optional[PricingRecommendation]:
     from openai import OpenAI
-    client = OpenAI(api_key=config.OPENAI_API_KEY)
+    kwargs = {"api_key": config.OPENAI_API_KEY}
+    if config.OPENAI_BASE_URL:
+        kwargs["base_url"] = config.OPENAI_BASE_URL
 
+    client = OpenAI(**kwargs)
     resp = client.chat.completions.create(
         model=config.OPENAI_MODEL,
-        response_format={"type": "json_object"},
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user",   "content": prompt},
@@ -108,10 +110,34 @@ def _call_ollama(prompt: str) -> Optional[PricingRecommendation]:
         "format": "json",
         "options": {"temperature": 0.2},
     }
-    resp = requests.post(f"{config.OLLAMA_BASE_URL}/api/chat", json=payload, timeout=60)
+    resp = requests.post(f"{config.OLLAMA_BASE_URL}/api/chat", json=payload, timeout=120)
     resp.raise_for_status()
     raw = resp.json()["message"]["content"]
     return PricingRecommendation(**json.loads(raw))
+
+
+# ── Mock backend (pipeline testing without LLM) ───────────────────────────────
+
+_MOCK_SCORES = {
+    "SOCIAL_TREND_POSITIVE":  ( 0.60,  1.10, "Positive social trend detected; modest price increase recommended."),
+    "SOCIAL_TREND_NEGATIVE":  (-0.55,  0.90, "Negative social trend detected; slight price reduction recommended."),
+    "COMPETITOR_PRICE_DROP":  (-0.70,  0.85, "Competitor price drop; reducing price to remain competitive."),
+    "COMPETITOR_PRICE_SURGE": ( 0.65,  1.15, "Competitor price surge; opportunity for modest price increase."),
+    "REVIEW_SURGE_POSITIVE":  ( 0.50,  1.08, "Surge in positive reviews; marginal price increase warranted."),
+    "REVIEW_SURGE_NEGATIVE":  (-0.60,  0.92, "Negative review surge; price reduction to restore demand."),
+    "NEWS_POSITIVE":          ( 0.45,  1.07, "Positive news coverage; slight price increase recommended."),
+    "NEWS_NEGATIVE":          (-0.50,  0.93, "Negative news coverage; slight price reduction recommended."),
+}
+
+def _mock_analyze(event: dict) -> PricingRecommendation:
+    event_type = event.get("eventType", "UNKNOWN")
+    score, multiplier, reason = _MOCK_SCORES.get(event_type, (0.0, 1.0, "No signal detected; price unchanged."))
+    return PricingRecommendation(
+        sentiment_score=score,
+        price_multiplier=multiplier,
+        adjustment_reason=reason,
+        confidence=0.85,
+    )
 
 
 # ── Public interface ─────────────────────────────────────────────────────────
@@ -121,6 +147,10 @@ def analyze(event: dict) -> Optional[PricingRecommendation]:
     Calls the configured LLM and returns a PricingRecommendation.
     Returns None on any failure so the caller can decide whether to skip or retry.
     """
+    if config.MOCK_LLM:
+        log.debug("Mock LLM: returning deterministic recommendation for event %s", event.get("eventId"))
+        return _mock_analyze(event)
+
     prompt = build_prompt(event)
     try:
         if config.USE_OPENAI:

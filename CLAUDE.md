@@ -10,16 +10,15 @@
 | Phase | Status | Description |
 |---|---|---|
 | Phase 1 — Spring Boot + MongoDB | **Complete and tested** | All 12 unit tests green, all REST API checks passed |
-| Phase 2 — Kafka + Event Simulator | Code complete, not yet tested | docker-compose.yml + simulator.py written |
-| Phase 3 — AI Sentiment Consumer | Code complete, not yet tested | Python LLM pipeline written |
-| Phase 4 — Dynamic Pricing Updater | Code complete, not yet tested | Kafka consumer + optimistic lock in Spring Boot |
+| Phase 2 — Kafka + Event Simulator | **Complete and tested** | Topics created, simulator produces well-formed events to raw-sentiment-events |
+| Phase 3 — AI Sentiment Consumer | **Complete and tested** | Ollama llama3.2:1b processes events, publishes to price-adjustment-events |
+| Phase 4 — Dynamic Pricing Updater | **Complete and tested** | Price updated 199.99→229.99, audit log populated, cooldown/idempotency verified |
 | Phase 5 — Full Docker Compose | Code complete, not yet tested | All services wired in docker-compose.yml |
 
 ### What to do in the next session
-**Start Phase 2 testing.** Phase 1 is complete. Phase 2 brings up the full Kafka stack
-(Zookeeper + Kafka via docker-compose) and runs the Python event simulator to produce
-raw sentiment events onto the `raw-sentiment-events` topic. Verify events are produced
-and consumed correctly before moving to Phase 3.
+**Start Phase 5 testing.** Phases 1–4 are all complete and tested. Phase 5 wires everything
+together in a single `docker compose up` — all services run as containers. The main task is
+building and running the full stack via Docker Compose and verifying end-to-end flow.
 
 ---
 
