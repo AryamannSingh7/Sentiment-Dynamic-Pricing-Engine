@@ -13,12 +13,11 @@
 | Phase 2 — Kafka + Event Simulator | **Complete and tested** | Topics created, simulator produces well-formed events to raw-sentiment-events |
 | Phase 3 — AI Sentiment Consumer | **Complete and tested** | Ollama llama3.2:1b processes events, publishes to price-adjustment-events |
 | Phase 4 — Dynamic Pricing Updater | **Complete and tested** | Price updated 199.99→229.99, audit log populated, cooldown/idempotency verified |
-| Phase 5 — Full Docker Compose | Code complete, not yet tested | All services wired in docker-compose.yml |
+| Phase 5 — Full Docker Compose | **Complete and tested** | All 6 containers healthy, full pipeline running end-to-end |
 
 ### What to do in the next session
-**Start Phase 5 testing.** Phases 1–4 are all complete and tested. Phase 5 wires everything
-together in a single `docker compose up` — all services run as containers. The main task is
-building and running the full stack via Docker Compose and verifying end-to-end flow.
+**All phases complete.** The project is fully implemented and tested. Pending cleanup:
+- Remove CLAUDE.md from the git repo (add to .gitignore, purge with `git rm --cached CLAUDE.md`)
 
 ---
 
