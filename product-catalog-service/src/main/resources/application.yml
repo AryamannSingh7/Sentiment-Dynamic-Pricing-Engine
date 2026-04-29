@@ -30,6 +30,9 @@ management:
     health:
       show-details: always
 
+allowed:
+  origins: ${ALLOWED_ORIGINS:*}
+
 pricing:
   # Set KAFKA_ENABLED=false to run without Kafka (Phase 1 testing)
   kafka:

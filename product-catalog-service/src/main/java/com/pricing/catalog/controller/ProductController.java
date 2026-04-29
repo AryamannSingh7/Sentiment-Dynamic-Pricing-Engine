@@ -1,6 +1,7 @@
 package com.pricing.catalog.controller;
 
 import com.pricing.catalog.dto.CreateProductRequest;
+import com.pricing.catalog.dto.DemoTriggerRequest;
 import com.pricing.catalog.dto.UpdateProductRequest;
 import com.pricing.catalog.model.PriceAuditLog;
 import com.pricing.catalog.model.Product;
@@ -50,5 +51,11 @@ public class ProductController {
     @GetMapping("/{productId}/audit")
     public List<PriceAuditLog> getAuditLog(@PathVariable String productId) {
         return productService.getAuditLog(productId);
+    }
+
+    @PostMapping("/{productId}/demo/trigger")
+    public Product triggerDemo(@PathVariable String productId,
+                               @Valid @RequestBody DemoTriggerRequest request) {
+        return productService.triggerDemoAdjustment(productId, request.eventType());
     }
 }
