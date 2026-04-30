@@ -4,7 +4,7 @@ import { api } from '@/lib/api';
 import { PRODUCT_IDS } from '@/lib/constants';
 import type { Product } from '@/lib/types';
 
-const KNOWN_IDS = new Set(Object.values(PRODUCT_IDS));
+const KNOWN_IDS = new Set<string>(Object.values(PRODUCT_IDS));
 
 export function useProducts() {
   const [products, setProducts]   = useState<Product[]>([]);
