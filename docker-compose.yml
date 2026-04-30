@@ -102,6 +102,10 @@ services:
         condition: service_completed_successfully
     environment:
       KAFKA_BOOTSTRAP_SERVERS: ${KAFKA_BOOTSTRAP_SERVERS}
+      KAFKA_SASL_USERNAME: ${KAFKA_SASL_USERNAME:-}
+      KAFKA_SASL_PASSWORD: ${KAFKA_SASL_PASSWORD:-}
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+      GROQ_MODEL: ${GROQ_MODEL:-llama-3.1-8b-instant}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
       OPENAI_BASE_URL: ${OPENAI_BASE_URL:-}
       OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
@@ -126,6 +130,31 @@ services:
       SIMULATOR_PRODUCT_IDS: ${SIMULATOR_PRODUCT_IDS:-}
       SIMULATOR_EVENTS_PER_SECOND: ${SIMULATOR_EVENTS_PER_SECOND:-1}
       CATALOG_SERVICE_URL: http://product-catalog-service:8080
+    restart: on-failure
+
+  real-sentiment-fetcher:
+    build:
+      context: ./real-sentiment-fetcher
+      dockerfile: Dockerfile
+    container_name: pricing-real-sentiment-fetcher
+    depends_on:
+      kafka:
+        condition: service_healthy
+      kafka-init:
+        condition: service_completed_successfully
+      product-catalog-service:
+        condition: service_healthy
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: ${KAFKA_BOOTSTRAP_SERVERS}
+      KAFKA_SASL_USERNAME: ${KAFKA_SASL_USERNAME:-}
+      KAFKA_SASL_PASSWORD: ${KAFKA_SASL_PASSWORD:-}
+      CATALOG_SERVICE_URL: http://product-catalog-service:8080
+      SIMULATOR_PRODUCT_IDS: ${SIMULATOR_PRODUCT_IDS:-}
+      FETCH_INTERVAL_SECONDS: ${FETCH_INTERVAL_SECONDS:-300}
+      REDDIT_CLIENT_ID: ${REDDIT_CLIENT_ID:-}
+      REDDIT_CLIENT_SECRET: ${REDDIT_CLIENT_SECRET:-}
+      REDDIT_USER_AGENT: ${REDDIT_USER_AGENT:-sentiment-fetcher/1.0}
+      REDDIT_SUBREDDITS: ${REDDIT_SUBREDDITS:-gadgets,headphones,tech,Electronics,buildapc}
     restart: on-failure
 
 volumes:

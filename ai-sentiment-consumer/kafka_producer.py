@@ -16,7 +16,15 @@ _producer: Producer | None = None
 def _get_producer() -> Producer:
     global _producer
     if _producer is None:
-        _producer = Producer({"bootstrap.servers": config.KAFKA_BOOTSTRAP})
+        conf = {"bootstrap.servers": config.KAFKA_BOOTSTRAP}
+        if config.USE_SASL:
+            conf.update({
+                "security.protocol": "SASL_SSL",
+                "sasl.mechanism":    "SCRAM-SHA-256",
+                "sasl.username":     config.KAFKA_SASL_USERNAME,
+                "sasl.password":     config.KAFKA_SASL_PASSWORD,
+            })
+        _producer = Producer(conf)
     return _producer
 
 

@@ -78,6 +78,35 @@ def build_prompt(event: dict) -> str:
 
 # ── LLM backends ─────────────────────────────────────────────────────────────
 
+def _parse_json(raw: str) -> dict:
+    """Extract and parse the JSON object from an LLM response.
+
+    Handles markdown code fences, preamble text, and trailing prose that
+    some models append after the closing brace.
+    """
+    start = raw.find("{")
+    end   = raw.rfind("}") + 1
+    if start == -1 or end == 0:
+        raise ValueError(f"No JSON object found in LLM response: {raw!r}")
+    return json.loads(raw[start:end])
+
+
+def _call_groq(prompt: str) -> Optional[PricingRecommendation]:
+    from openai import OpenAI
+    client = OpenAI(api_key=config.GROQ_API_KEY, base_url=config.GROQ_BASE_URL)
+    resp = client.chat.completions.create(
+        model=config.GROQ_MODEL,
+        messages=[
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user",   "content": prompt},
+        ],
+        temperature=0.2,
+        max_tokens=256,
+    )
+    raw = resp.choices[0].message.content
+    return PricingRecommendation(**_parse_json(raw))
+
+
 def _call_openai(prompt: str) -> Optional[PricingRecommendation]:
     from openai import OpenAI
     kwargs = {"api_key": config.OPENAI_API_KEY}
@@ -95,7 +124,7 @@ def _call_openai(prompt: str) -> Optional[PricingRecommendation]:
         max_tokens=256,
     )
     raw = resp.choices[0].message.content
-    return PricingRecommendation(**json.loads(raw))
+    return PricingRecommendation(**_parse_json(raw))
 
 
 def _call_ollama(prompt: str) -> Optional[PricingRecommendation]:
@@ -113,7 +142,7 @@ def _call_ollama(prompt: str) -> Optional[PricingRecommendation]:
     resp = requests.post(f"{config.OLLAMA_BASE_URL}/api/chat", json=payload, timeout=120)
     resp.raise_for_status()
     raw = resp.json()["message"]["content"]
-    return PricingRecommendation(**json.loads(raw))
+    return PricingRecommendation(**_parse_json(raw))
 
 
 # ── Mock backend (pipeline testing without LLM) ───────────────────────────────
@@ -153,7 +182,10 @@ def analyze(event: dict) -> Optional[PricingRecommendation]:
 
     prompt = build_prompt(event)
     try:
-        if config.USE_OPENAI:
+        if config.USE_GROQ:
+            log.debug("Calling Groq %s for event %s", config.GROQ_MODEL, event.get("eventId"))
+            return _call_groq(prompt)
+        elif config.USE_OPENAI:
             log.debug("Calling OpenAI %s for event %s", config.OPENAI_MODEL, event.get("eventId"))
             return _call_openai(prompt)
         else:

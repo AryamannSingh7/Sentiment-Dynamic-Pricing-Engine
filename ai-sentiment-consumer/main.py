@@ -41,14 +41,22 @@ signal.signal(signal.SIGTERM, _handle_signal)
 # ── Consumer setup ───────────────────────────────────────────────────────────
 
 def build_consumer() -> Consumer:
-    return Consumer({
+    conf = {
         "bootstrap.servers":        config.KAFKA_BOOTSTRAP,
         "group.id":                 config.CONSUMER_GROUP,
         "auto.offset.reset":        "earliest",
-        "enable.auto.commit":       False,   # manual commit after processing
+        "enable.auto.commit":       False,
         "max.poll.interval.ms":     300_000,
         "session.timeout.ms":       30_000,
-    })
+    }
+    if config.USE_SASL:
+        conf.update({
+            "security.protocol": "SASL_SSL",
+            "sasl.mechanism":    "SCRAM-SHA-256",
+            "sasl.username":     config.KAFKA_SASL_USERNAME,
+            "sasl.password":     config.KAFKA_SASL_PASSWORD,
+        })
+    return Consumer(conf)
 
 # ── Main loop ────────────────────────────────────────────────────────────────
 
@@ -58,9 +66,12 @@ def main():
     log.info("Subscribed to '%s' as group '%s'", config.RAW_TOPIC, config.CONSUMER_GROUP)
     if config.MOCK_LLM:
         log.info("LLM backend: MOCK (deterministic, no external calls)")
+    elif config.USE_GROQ:
+        log.info("LLM backend: Groq %s", config.GROQ_MODEL)
+    elif config.USE_OPENAI:
+        log.info("LLM backend: OpenAI %s", config.OPENAI_MODEL)
     else:
-        log.info("LLM backend: %s", "OpenAI " + config.OPENAI_MODEL if config.USE_OPENAI
-                 else "Ollama " + config.OLLAMA_MODEL)
+        log.info("LLM backend: Ollama %s", config.OLLAMA_MODEL)
 
     processed = 0
     try:

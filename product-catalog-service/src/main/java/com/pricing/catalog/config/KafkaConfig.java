@@ -1,6 +1,7 @@
 package com.pricing.catalog.config;
 
 import com.pricing.catalog.dto.PriceAdjustmentEvent;
+import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -13,6 +14,7 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.core.KafkaAdmin;
 import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 
@@ -35,6 +37,30 @@ public class KafkaConfig {
 
     @Value("${pricing.kafka.topics.price-adjustment-events}")
     private String priceAdjustmentTopic;
+
+    @Value("${kafka.sasl.username:}")
+    private String saslUsername;
+
+    @Value("${kafka.sasl.password:}")
+    private String saslPassword;
+
+    private void applySasl(Map<String, Object> props) {
+        if (saslUsername != null && !saslUsername.isBlank()) {
+            props.put("security.protocol", "SASL_SSL");
+            props.put("sasl.mechanism", "SCRAM-SHA-256");
+            props.put("sasl.jaas.config",
+                "org.apache.kafka.common.security.scram.ScramLoginModule required " +
+                "username=\"" + saslUsername + "\" password=\"" + saslPassword + "\";");
+        }
+    }
+
+    @Bean
+    public KafkaAdmin kafkaAdmin() {
+        Map<String, Object> props = new HashMap<>();
+        props.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        applySasl(props);
+        return new KafkaAdmin(props);
+    }
 
     @Bean
     public NewTopic rawSentimentEventsTopic() {
@@ -59,6 +85,7 @@ public class KafkaConfig {
         props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
+        applySasl(props);
 
         JsonDeserializer<PriceAdjustmentEvent> deserializer =
                 new JsonDeserializer<>(PriceAdjustmentEvent.class, false);
