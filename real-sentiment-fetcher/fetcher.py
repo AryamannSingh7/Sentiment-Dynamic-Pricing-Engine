@@ -216,13 +216,17 @@ def resolve_product_ids() -> list[str]:
     ids = [p.strip() for p in raw.split(",") if p.strip()]
     if ids:
         return ids
-    try:
-        resp = requests.get(f"{CATALOG_URL}/api/products", timeout=5)
-        resp.raise_for_status()
-        return [p["productId"] for p in resp.json()]
-    except Exception as exc:
-        log.error("Failed to fetch products from catalog: %s", exc)
-        return []
+    for attempt in range(1, 6):
+        try:
+            resp = requests.get(f"{CATALOG_URL}/api/products", timeout=10)
+            resp.raise_for_status()
+            return [p["productId"] for p in resp.json()]
+        except Exception as exc:
+            wait = attempt * 15
+            log.warning("Catalog fetch attempt %d/5 failed: %s — retrying in %ds", attempt, exc, wait)
+            time.sleep(wait)
+    log.error("Could not fetch product IDs after 5 attempts. Set SIMULATOR_PRODUCT_IDS to bypass.")
+    return []
 
 
 # ── Main loop ─────────────────────────────────────────────────────────────────
