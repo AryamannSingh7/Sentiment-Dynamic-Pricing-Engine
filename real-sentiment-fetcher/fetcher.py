@@ -194,7 +194,7 @@ def fetch_rss(product_ids: list[str], producer: Producer, seen: set) -> int:
                     continue
 
                 product_id = random.choice(product_ids)
-                event = build_event(product_id, text, source, is_reddit=False)
+                event = build_event(product_id, text, source, is_reddit="reddit.com" in feed_url)
                 if DRY_RUN:
                     log.info("[DRY-RUN] RSS  %-19s → %-28s | %s", domain, event["eventType"], title[:55])
                 else:
