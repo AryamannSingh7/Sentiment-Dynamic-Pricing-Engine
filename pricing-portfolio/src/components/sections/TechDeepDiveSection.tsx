@@ -71,8 +71,8 @@ const TABS = [
         a: "The system prompt instructs the model to respond only with valid JSON matching the PricingRecommendation schema (sentiment_score, price_multiplier, adjustment_reason, confidence). The response is parsed and validated by Pydantic. If parsing fails, the event is retried. In prod, structured output APIs (OpenAI response_format) enforce JSON at the API level.",
       },
       {
-        q: 'Why Ollama for local testing?',
-        a: "OpenRouter's free tier limits to 8 req/min — too slow for pipeline testing. Ollama runs llama3.2:1b locally at ~60 tokens/s, making the full pipeline runnable offline. The OPENAI_API_KEY env var switches between backends transparently: set it for OpenAI/OpenRouter, leave it blank for Ollama.",
+        q: 'How does the LLM backend differ between local and production?',
+        a: "Locally, Ollama runs llama3.2:1b on your machine at ~60 tokens/s — zero cost, works offline, ideal for pipeline testing. In production, the consumer calls Groq's free API (llama-3.1-8b-instant) — no GPU required, sub-second inference, and the free tier handles the pipeline's throughput comfortably. The GROQ_API_KEY env var switches backends: set it for Groq, leave it blank for Ollama.",
       },
     ],
   },

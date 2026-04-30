@@ -5,9 +5,9 @@ import GradientText from '@/components/ui/GradientText';
 
 const NODES = [
   { icon: '📡', label: 'Market Signal',   desc: 'Social trends, competitor prices, news, reviews' },
-  { icon: '⚡', label: 'Event Simulator', desc: 'Produces raw sentiment events to Kafka' },
+  { icon: '⚡', label: 'Signal Sources',  desc: 'Reddit/RSS fetcher + event simulator → Kafka' },
   { icon: '🔀', label: 'Apache Kafka',    desc: '3-partition topic, ordered per product' },
-  { icon: '🤖', label: 'AI / LLM',        desc: 'Python consumer, Ollama llama3.2 inference' },
+  { icon: '🤖', label: 'AI / LLM',        desc: 'Python consumer, Groq in prod / Ollama locally' },
   { icon: '☕', label: 'Spring Boot',     desc: '5-layer safety pipeline, optimistic locking' },
   { icon: '🍃', label: 'MongoDB Atlas',   desc: 'Products + immutable audit log collection' },
 ];

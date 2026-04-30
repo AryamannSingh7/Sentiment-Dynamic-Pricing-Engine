@@ -8,9 +8,9 @@ const TECH_CARDS = [
   { icon: '🍃', name: 'MongoDB Atlas',              color: '#22c55e', desc: 'Flexible document model, immutable audit log' },
   { icon: '🔀', name: 'Apache Kafka',               color: '#3b82f6', desc: 'Durable event streaming, at-least-once delivery' },
   { icon: '🐍', name: 'Python 3.11',                color: '#facc15', desc: 'Confluent-Kafka consumer, LLM integration' },
-  { icon: '🤖', name: 'Ollama / OpenAI',            color: '#8b5cf6', desc: 'llama3.2:1b inference, gpt-4o-mini fallback' },
+  { icon: '🤖', name: 'Groq / Ollama',              color: '#8b5cf6', desc: 'Groq in production, Ollama locally, llama-3.1-8b' },
   { icon: '🐳', name: 'Docker Compose',             color: '#06b6d4', desc: '6-container local stack, multi-stage builds' },
-  { icon: '🚂', name: 'Railway',                    color: '#ec4899', desc: 'Spring Boot cloud deployment, free tier' },
+  { icon: '🎯', name: 'Render',                     color: '#ec4899', desc: 'Spring Boot + Python workers, free web services' },
   { icon: '▲',  name: 'Vercel',                     color: '#f1f5f9', desc: 'Next.js frontend, global CDN, instant deploys' },
 ];
 
@@ -83,8 +83,9 @@ export default function ArchitectureSection({ id }: { id?: string }) {
                 reason, and timestamp — giving full traceability from signal to price.
               </p>
               <p>
-                In production (this demo), the Kafka pipeline is replaced by a direct demo
-                endpoint so the website works without any local infrastructure.
+                In production, events flow through <strong style={{ color: 'var(--text-primary)' }}>Redpanda</strong> (managed Kafka)
+                into the AI consumer running on Render, which calls Groq to compute price
+                adjustments. A demo trigger endpoint lets you fire events instantly from the UI.
               </p>
             </div>
           </motion.div>
