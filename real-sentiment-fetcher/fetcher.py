@@ -25,9 +25,11 @@ import logging
 import os
 import random
 import re
+import threading
 import time
 import uuid
 from datetime import datetime, timezone
+from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse
 
 import feedparser
@@ -225,6 +227,18 @@ def resolve_product_ids() -> list[str]:
 
 # ── Main loop ─────────────────────────────────────────────────────────────────
 
+def _start_health_server():
+    class _H(BaseHTTPRequestHandler):
+        def do_GET(self):
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write(b"OK")
+        def log_message(self, *args):
+            pass
+    port = int(os.getenv("PORT", "8080"))
+    HTTPServer(("0.0.0.0", port), _H).serve_forever()
+
+
 def main():
     global DRY_RUN
     parser = argparse.ArgumentParser()
@@ -232,6 +246,10 @@ def main():
                         help="Fetch and classify without connecting to Kafka (test mode)")
     args = parser.parse_args()
     DRY_RUN = args.dry_run
+
+    if not DRY_RUN:
+        threading.Thread(target=_start_health_server, daemon=True).start()
+        log.info("Health server started on port %s", os.getenv("PORT", "8080"))
 
     if DRY_RUN:
         log.info("DRY-RUN mode — events will be classified and logged but NOT sent to Kafka")

@@ -10,9 +10,12 @@ Partition key:  productId (matches simulator and producer — ensures ordering)
 
 import json
 import logging
+import os
 import signal
 import sys
+import threading
 import time
+from http.server import BaseHTTPRequestHandler, HTTPServer
 
 from confluent_kafka import Consumer, KafkaError, KafkaException
 
@@ -40,6 +43,18 @@ signal.signal(signal.SIGTERM, _handle_signal)
 
 # ── Consumer setup ───────────────────────────────────────────────────────────
 
+def _start_health_server():
+    class _H(BaseHTTPRequestHandler):
+        def do_GET(self):
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write(b"OK")
+        def log_message(self, *args):
+            pass
+    port = int(os.getenv("PORT", "8080"))
+    HTTPServer(("0.0.0.0", port), _H).serve_forever()
+
+
 def build_consumer() -> Consumer:
     conf = {
         "bootstrap.servers":        config.KAFKA_BOOTSTRAP,
@@ -61,6 +76,9 @@ def build_consumer() -> Consumer:
 # ── Main loop ────────────────────────────────────────────────────────────────
 
 def main():
+    threading.Thread(target=_start_health_server, daemon=True).start()
+    log.info("Health server started on port %s", os.getenv("PORT", "8080"))
+
     consumer = build_consumer()
     consumer.subscribe([config.RAW_TOPIC])
     log.info("Subscribed to '%s' as group '%s'", config.RAW_TOPIC, config.CONSUMER_GROUP)
