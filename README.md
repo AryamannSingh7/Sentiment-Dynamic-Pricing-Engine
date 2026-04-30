@@ -7,7 +7,7 @@
 ![MongoDB](https://img.shields.io/badge/MongoDB-7.0-green?logo=mongodb)
 ![Docker](https://img.shields.io/badge/Docker-Compose-blue?logo=docker)
 
-> An event-driven backend that listens to real-world signals — social media trends, competitor price changes, review surges — and automatically adjusts product prices using AI-powered sentiment analysis.abc
+> An event-driven backend that listens to real-world signals — social media trends, competitor price changes, review surges — and automatically adjusts product prices using AI-powered sentiment analysis.
 
 ---
 
