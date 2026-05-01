@@ -74,6 +74,17 @@ _PRICE_SURGE  = re.compile(r"price.?(hike|increase|surge|raise|up)|expensive|mar
 _REVIEW_WORDS = re.compile(r"\breview|rating|\bstar\b|recommend|worth.?buy|rated\b", re.I)
 _PERCENT      = re.compile(r"(\d+(?:\.\d+)?)\s*%")
 
+# Posts must match at least one of these to be worth publishing
+_RELEVANT     = re.compile(
+    r"price|cost|\$|deal|sale|discount|cheap|expensive|worth|"
+    r"\bbuy\b|recommend|review|rating|\bstar\b|quality|value|"
+    r"\bvs\b|versus|compare|upgrade|downgrade|release|launch|announc|"
+    r"available|out.?of.?stock|performance|benchmark|"
+    r"best|worst|terrible|amazing|awful|great|poor|disappoint|impress|"
+    r"competitor|market|trend|demand|popular|hype|overpric|underpric",
+    re.I
+)
+
 # ── Classification ────────────────────────────────────────────────────────────
 
 def _polarity(text: str) -> float:
@@ -155,6 +166,10 @@ def fetch_reddit(product_ids: list[str], producer: Producer, seen: set) -> int:
                 if post.selftext:
                     text += " " + post.selftext[:300]
 
+                if not _RELEVANT.search(text):
+                    log.debug("Reddit r/%-12s → skipped (no signal) | %s", sub_name, post.title[:55])
+                    continue
+
                 product_id = random.choice(product_ids)
                 event = build_event(product_id, text, f"reddit-r/{sub_name}", is_reddit=True)
                 if DRY_RUN:
@@ -191,6 +206,10 @@ def fetch_rss(product_ids: list[str], producer: Producer, seen: set) -> int:
                 summary = re.sub(r"<[^>]+>", " ", entry.get("summary", ""))  # strip HTML
                 text    = f"{title} {summary}".strip()
                 if not text:
+                    continue
+
+                if not _RELEVANT.search(text):
+                    log.debug("RSS  %-22s → skipped (no signal) | %s", domain, title[:55])
                     continue
 
                 product_id = random.choice(product_ids)

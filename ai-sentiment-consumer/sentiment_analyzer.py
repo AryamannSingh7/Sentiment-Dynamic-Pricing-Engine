@@ -46,6 +46,7 @@ Rules:
 - Be conservative: typical adjustments are ±0.05 to ±0.20.
 - Only extreme, high-confidence signals justify ±0.20 or more.
 - sentiment_score is a delta in [-1.0, 1.0]: how much this event shifts demand sentiment.
+- If the signal has no clear pricing relevance (e.g. a general question, unrelated discussion, technical help request), set price_multiplier to 1.0, sentiment_score to 0.0, confidence to 0.1, and adjustment_reason to "No meaningful pricing signal detected."
 - Always respond with valid JSON matching the schema exactly — no markdown, no prose.
 """
 
