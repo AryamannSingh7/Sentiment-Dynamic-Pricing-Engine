@@ -9,7 +9,7 @@
 ![Render](https://img.shields.io/badge/Deployed-Render-46E3B7?logo=render&logoColor=white)
 ![Vercel](https://img.shields.io/badge/Frontend-Vercel-black?logo=vercel&logoColor=white)
 
-> An event-driven, AI-powered pricing engine that ingests real-world market signals — Reddit discussions, tech news, competitor price changes — and automatically adjusts product prices using an LLM. Fully deployed and running autonomously.
+> An event-driven, AI-powered pricing engine that ingests real-world market signals — Reddit discussions, tech news, competitor price changes — and automatically adjusts product prices using an LLM. Fully deployed and running autonomously.a
 
 **[→ Live Demo](https://pricing-portfolio.vercel.app)**
 
