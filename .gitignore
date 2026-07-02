@@ -1,9 +1,8 @@
 # ── Project-specific exclusions ────────────────────────────────────────────
 SYSTEM_DESIGN.txt
 .env
-.claude/
-CLAUDE.md
 INTERVIEW_PREP.md
+WALKTHROUGH.md
 
 # ── Java / Maven ────────────────────────────────────────────────────────────
 target/
