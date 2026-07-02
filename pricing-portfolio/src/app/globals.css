@@ -2,194 +2,210 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ── Theme variables ─────────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════════════
+   The Pricing Desk — 21st.dev "Craft / Amber" theme
+   Warm cream surfaces with an amber brand accent; the only extra hues are
+   semantic market movement (olive gain / red loss). Light-first, with a
+   symmetric dark variant under html.dark.
+   ═══════════════════════════════════════════════════════════════════════ */
 :root {
-  --bg-primary:    #0a0a0f;
-  --bg-card:       rgba(255, 255, 255, 0.05);
-  --border-card:   rgba(255, 255, 255, 0.10);
-  --text-primary:  #f1f5f9;
-  --text-muted:    #64748b;
-  --accent-blue:   #3b82f6;
-  --accent-violet: #8b5cf6;
-  --accent-pink:   #ec4899;
+  /* ── 21st.dev "Craft / Amber" palette ─────────────────────────────── */
+  --background:  #FDFBF7;
+  --card:        #F8F4EE;
+  --primary:     #B45309;
+  --secondary:   #E4C090;
+  --destructive: #991B1B;
+  --ring:        #B45309;
+  --radius:      0.3rem;
+
+  --font-sans:   var(--font-oxanium), Oxanium, sans-serif;
+  --font-serif:  var(--font-merriweather), Merriweather, serif;
+  --font-mono:   var(--font-fira), "Fira Code", monospace;
+
+  /* Internal semantic aliases (drive every component) */
+  --paper:        var(--background);
+  --surface:      var(--card);
+  --surface-2:    #F1E9DA;
+  --ink:          #4A3B33;
+  --ink-soft:     #57534E;
+  --muted:        #78716C;
+  --line:         #E4D9BC;
+  --line-strong:  #D6C29A;
+
+  --accent:       #B45309;
+  --accent-soft:  rgba(180, 83, 9, 0.12);
+  --up:           #4D7C0F;   /* olive gain — harmonizes with the warm palette */
+  --up-soft:      rgba(77, 124, 15, 0.14);
+  --down:         #991B1B;   /* theme destructive */
+  --down-soft:    rgba(153, 27, 27, 0.12);
+  --warn:         #CA8A04;
+
+  --shadow-card:  0 1px 2px rgba(74,59,51,0.06), 0 10px 30px -18px rgba(74,59,51,0.20);
+  --shadow-lift:  0 2px 6px rgba(74,59,51,0.09), 0 20px 44px -22px rgba(74,59,51,0.28);
+
+  /* legacy aliases consumed across existing components */
+  --bg-primary:   var(--paper);
+  --bg-card:      var(--surface);
+  --border-card:  var(--line);
+  --text-primary: var(--ink);
+  --text-muted:   var(--muted);
 }
 
-html.light {
-  --bg-primary:    #f0f4ff;
-  --bg-card:       rgba(255, 255, 255, 0.80);
-  --border-card:   rgba(0, 0, 0, 0.10);
-  --text-primary:  #0f172a;
-  --text-muted:    #64748b;
+html.dark {
+  --background:  #1C1917;
+  --card:        #292524;
+  --primary:     #F97316;
+  --secondary:   #57534E;
+  --destructive: #DC2626;
+  --ring:        #F97316;
+
+  --paper:        var(--background);
+  --surface:      var(--card);
+  --surface-2:    #201D1A;
+  --ink:          #F5F5F4;
+  --ink-soft:     #E7E5E4;
+  --muted:        #A8A29E;
+  --line:         #44403C;
+  --line-strong:  #57534E;
+
+  --accent:       #F97316;
+  --accent-soft:  rgba(249, 115, 22, 0.16);
+  --up:           #84CC16;
+  --up-soft:      rgba(132, 204, 22, 0.16);
+  --down:         #DC2626;
+  --down-soft:    rgba(220, 38, 38, 0.16);
+  --warn:         #EAB308;
+
+  --shadow-card:  0 1px 2px rgba(0,0,0,0.45), 0 14px 40px -20px rgba(0,0,0,0.7);
+  --shadow-lift:  0 2px 8px rgba(0,0,0,0.55), 0 24px 52px -24px rgba(0,0,0,0.8);
 }
 
 /* ── Base ────────────────────────────────────────────────────────────── */
-html {
-  /* scroll-behavior handled by custom JS easing in Navbar — keep auto here */
-  scroll-behavior: auto;
-}
+html { scroll-behavior: auto; }
 
 body {
   background: var(--bg-primary);
   color: var(--text-primary);
-  font-family: var(--font-inter), system-ui, sans-serif;
+  font-family: var(--font-sans);
   transition: background 0.3s, color 0.3s;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* ── Animated gradient mesh background ───────────────────────────────── */
-@keyframes meshShift {
-  0%   { background-position: 0% 50%; }
-  50%  { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+/* Serif display headings carry the warmth; mono carries the data */
+h1, h2, h3, .font-display {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.font-serif { font-family: var(--font-serif); }
+.font-mono, .mono {
+  font-family: var(--font-mono);
+  font-feature-settings: "tnum" 1, "zero" 1;
 }
 
-.gradient-mesh {
-  background:
-    radial-gradient(ellipse at 20% 50%, rgba(59, 130, 246, 0.12) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 20%, rgba(139, 92, 246, 0.12) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 90%, rgba(236, 72, 153, 0.08) 0%, transparent 50%),
-    var(--bg-primary);
-  background-size: 400% 400%;
-  animation: meshShift 18s ease infinite;
+/* Eyebrow / kicker — mono, tracked-out, muted */
+.kicker {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 
-html.light .gradient-mesh {
-  background:
-    radial-gradient(ellipse at 20% 50%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 20%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 90%, rgba(236, 72, 153, 0.05) 0%, transparent 50%),
-    var(--bg-primary);
-  background-size: 400% 400%;
-  animation: meshShift 18s ease infinite;
+/* ── Card / panel (replaces glassmorphism) ───────────────────────────── */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: var(--shadow-card);
+  transition: box-shadow 0.25s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 
-/* ── Glassmorphism card ──────────────────────────────────────────────── */
-.glass-card {
-  background:    var(--bg-card);
-  border:        1px solid var(--border-card);
-  border-radius: 16px;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+/* ── Engineering grid background (replaces orbs/spotlight) ────────────── */
+.bg-grid {
+  background-image:
+    linear-gradient(to right,  var(--line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+  background-size: 68px 68px;
+  -webkit-mask-image: radial-gradient(ellipse 90% 60% at 50% 0%, #000 20%, transparent 78%);
+          mask-image: radial-gradient(ellipse 90% 60% at 50% 0%, #000 20%, transparent 78%);
 }
 
-/* ── Shimmer skeleton animation ─────────────────────────────────────── */
+/* ── Skeleton shimmer ────────────────────────────────────────────────── */
 @keyframes shimmer {
   0%   { background-position: -200% 0; }
   100% { background-position:  200% 0; }
 }
-
 .skeleton {
   background: linear-gradient(90deg,
-    rgba(255,255,255,0.05) 25%,
-    rgba(255,255,255,0.10) 50%,
-    rgba(255,255,255,0.05) 75%
+    var(--surface-2) 25%,
+    var(--line) 50%,
+    var(--surface-2) 75%
   );
   background-size: 200% 100%;
-  animation: shimmer 1.8s infinite;
+  animation: shimmer 1.6s infinite;
   border-radius: 8px;
 }
 
-/* ── Pipeline animation ──────────────────────────────────────────────── */
-@keyframes flowDot {
-  0%   { offset-distance: 0%;   opacity: 0; }
-  10%  { opacity: 1; }
-  90%  { opacity: 1; }
-  100% { offset-distance: 100%; opacity: 0; }
-}
-
-.flow-dot {
-  offset-path: path('M 0 0 L 100 0');
-  animation: flowDot 2s linear infinite;
-}
-
-/* ── Pulse glow for LIVE indicator ──────────────────────────────────── */
+/* ── LIVE indicator pulse ────────────────────────────────────────────── */
 @keyframes pulseGlow {
-  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
-  50%       { opacity: 0.7; box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+  0%, 100% { box-shadow: 0 0 0 0 var(--up-soft); }
+  50%      { box-shadow: 0 0 0 5px transparent; }
 }
+.live-dot { animation: pulseGlow 2s ease-in-out infinite; }
 
-.live-dot {
-  animation: pulseGlow 2s ease-in-out infinite;
+/* ── Marquee / ticker (21st.dev-style) ───────────────────────────────── */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(calc(-100% - var(--gap, 2rem))); }
 }
-
-/* ── Interactive background ─────────────────────────────────────────── */
-
-/* Dot grid pattern */
-.bg-dot-grid {
-  background-image: radial-gradient(rgba(255,255,255,0.12) 1px, transparent 1px);
-  background-size: 36px 36px;
+@keyframes marqueeReverse {
+  from { transform: translateX(calc(-100% - var(--gap, 2rem))); }
+  to   { transform: translateX(0); }
 }
-html.light .bg-dot-grid {
-  background-image: radial-gradient(rgba(0,0,0,0.07) 1px, transparent 1px);
-}
+.animate-marquee         { animation: marquee        var(--duration, 42s) linear infinite; }
+.animate-marquee-reverse { animation: marqueeReverse var(--duration, 42s) linear infinite; }
 
-/* Mouse-following spotlight */
-.spotlight {
-  background: radial-gradient(
-    700px circle at var(--mx, 50%) var(--my, 50%),
-    rgba(59, 130, 246, 0.07) 0%,
-    rgba(139, 92, 246, 0.04) 40%,
-    transparent 70%
+/* ── Shiny text sweep (animated badge) ───────────────────────────────── */
+@keyframes shineSweep {
+  0%   { background-position: 140% center; }
+  100% { background-position: -40% center; }
+}
+.shiny-text {
+  background: linear-gradient(
+    110deg,
+    var(--muted) 40%,
+    var(--ink) 50%,
+    var(--muted) 60%
   );
-  transition: background 0.05s linear;
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+          background-clip: text;
+  color: transparent;
+  animation: shineSweep 5s linear infinite;
 }
 
-/* Floating orbs */
-.orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.18;
-  animation-timing-function: ease-in-out;
-  animation-iteration-count: infinite;
-  animation-direction: alternate;
-}
-html.light .orb { opacity: 0.10; }
+/* ── Blinking caret for typewriter ───────────────────────────────────── */
+@keyframes caretBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+.caret { animation: caretBlink 1s step-end infinite; }
 
-.orb-1 {
-  width: 500px; height: 500px;
-  background: radial-gradient(circle, #3b82f6, transparent);
-  top: -10%; left: -5%;
-  animation: orbFloat1 14s infinite alternate;
-}
-.orb-2 {
-  width: 400px; height: 400px;
-  background: radial-gradient(circle, #8b5cf6, transparent);
-  top: 30%; right: -5%;
-  animation: orbFloat2 18s infinite alternate;
-}
-.orb-3 {
-  width: 350px; height: 350px;
-  background: radial-gradient(circle, #ec4899, transparent);
-  bottom: 10%; left: 20%;
-  animation: orbFloat3 22s infinite alternate;
-}
-.orb-4 {
-  width: 300px; height: 300px;
-  background: radial-gradient(circle, #06b6d4, transparent);
-  top: 60%; right: 25%;
-  animation: orbFloat1 16s 4s infinite alternate;
+/* ── Scrollbar ───────────────────────────────────────────────────────── */
+::-webkit-scrollbar        { width: 8px; height: 8px; }
+::-webkit-scrollbar-track  { background: transparent; }
+::-webkit-scrollbar-thumb  { background: var(--line-strong); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+/* ── Reduced motion ──────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee, .animate-marquee-reverse,
+  .shiny-text, .live-dot, .skeleton, .caret {
+    animation: none !important;
+  }
 }
 
-@keyframes orbFloat1 {
-  0%   { transform: translate(0px,    0px)  scale(1);    }
-  33%  { transform: translate(40px,  -60px) scale(1.08); }
-  66%  { transform: translate(-30px,  30px) scale(0.95); }
-  100% { transform: translate(20px,   50px) scale(1.05); }
+/* ── Focus visibility (quality floor) ────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
 }
-@keyframes orbFloat2 {
-  0%   { transform: translate(0px,    0px)  scale(1);    }
-  40%  { transform: translate(-50px,  40px) scale(1.1);  }
-  80%  { transform: translate(30px,  -20px) scale(0.92); }
-  100% { transform: translate(-20px, -40px) scale(1.03); }
-}
-@keyframes orbFloat3 {
-  0%   { transform: translate(0px,   0px)  scale(1);    }
-  50%  { transform: translate(60px, -30px) scale(1.06); }
-  100% { transform: translate(-40px, 50px) scale(0.97); }
-}
-
-/* ── Scrollbar styling ───────────────────────────────────────────────── */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.25); }

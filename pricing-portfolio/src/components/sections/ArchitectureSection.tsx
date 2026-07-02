@@ -1,17 +1,17 @@
 'use client';
 import { useRef, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
-import GradientText from '@/components/ui/GradientText';
+import AccentText from '@/components/ui/AccentText';
 
 const TECH_CARDS = [
-  { icon: '☕', name: 'Java 17 + Spring Boot 3.2', color: '#f97316', desc: 'REST API, Kafka consumer, optimistic locking' },
-  { icon: '🍃', name: 'MongoDB Atlas',              color: '#22c55e', desc: 'Flexible document model, immutable audit log' },
-  { icon: '🔀', name: 'Apache Kafka',               color: '#3b82f6', desc: 'Durable event streaming, at-least-once delivery' },
-  { icon: '🐍', name: 'Python 3.11',                color: '#facc15', desc: 'Confluent-Kafka consumer, LLM integration' },
-  { icon: '🤖', name: 'Groq / Ollama',              color: '#8b5cf6', desc: 'Groq in production, Ollama locally, llama-3.1-8b' },
-  { icon: '🐳', name: 'Docker Compose',             color: '#06b6d4', desc: '6-container local stack, multi-stage builds' },
-  { icon: '🎯', name: 'Render',                     color: '#ec4899', desc: 'Spring Boot + Python workers, free web services' },
-  { icon: '▲',  name: 'Vercel',                     color: '#f1f5f9', desc: 'Next.js frontend, global CDN, instant deploys' },
+  { icon: '☕', name: 'Java 17 + Spring Boot 3.2', color: '#C2410C', desc: 'REST API, Kafka consumer, optimistic locking' },
+  { icon: '🍃', name: 'MongoDB Atlas',              color: '#0E9F6E', desc: 'Flexible document model, immutable audit log' },
+  { icon: '🔀', name: 'Apache Kafka',               color: '#2F5BFF', desc: 'Durable event streaming, at-least-once delivery' },
+  { icon: '🐍', name: 'Python 3.11',                color: '#B7791F', desc: 'Confluent-Kafka consumer, LLM integration' },
+  { icon: '🤖', name: 'Groq / Ollama',              color: '#7C3AED', desc: 'Groq in production, Ollama locally, llama-3.1-8b' },
+  { icon: '🐳', name: 'Docker Compose',             color: '#0E7490', desc: '6-container local stack, multi-stage builds' },
+  { icon: '🎯', name: 'Render',                     color: '#BE185D', desc: 'Spring Boot + Python workers, free web services' },
+  { icon: '▲',  name: 'Vercel',                     color: 'var(--ink)', desc: 'Next.js frontend, global CDN, instant deploys' },
 ];
 
 function TechCard({ tech, index, inView }: { tech: typeof TECH_CARDS[0]; index: number; inView: boolean }) {
@@ -37,12 +37,17 @@ function TechCard({ tech, index, inView }: { tech: typeof TECH_CARDS[0]; index: 
       transition={{ delay: index * 0.07, duration: 0.45 }}
       onMouseMove={handleMouseMove}
       onMouseLeave={() => setTransform('')}
-      className="glass-card p-4 cursor-default transition-shadow duration-200 hover:shadow-lg"
-      style={{ transform, transition: transform ? 'transform 0.1s ease' : 'transform 0.4s ease', willChange: 'transform' }}
+      className="panel p-4 cursor-default transition-shadow duration-200 hover:shadow-lg"
+      style={{
+        transform,
+        transition: transform ? 'transform 0.1s ease' : 'transform 0.4s ease',
+        willChange: 'transform',
+        borderLeft: `3px solid ${tech.color}`,
+      }}
     >
       <div className="flex items-center gap-3 mb-2">
         <span className="text-2xl">{tech.icon}</span>
-        <span className="text-xs font-bold" style={{ color: tech.color }}>{tech.name}</span>
+        <span className="text-xs font-bold" style={{ color: 'var(--ink)' }}>{tech.name}</span>
       </div>
       <p className="text-xs leading-relaxed" style={{ color: 'var(--text-muted)' }}>{tech.desc}</p>
     </motion.div>
@@ -64,7 +69,7 @@ export default function ArchitectureSection({ id }: { id?: string }) {
             transition={{ duration: 0.6 }}
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-6">
-              Architecture <GradientText>Overview</GradientText>
+              Architecture <AccentText>Overview</AccentText>
             </h2>
             <div className="space-y-4 text-sm leading-relaxed" style={{ color: 'var(--text-muted)' }}>
               <p>

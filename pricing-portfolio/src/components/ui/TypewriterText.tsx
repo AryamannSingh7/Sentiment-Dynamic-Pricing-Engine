@@ -37,7 +37,7 @@ export default function TypewriterText({ phrases, className = '' }: Props) {
   return (
     <span className={className}>
       {display}
-      <span className="inline-block w-0.5 h-[1em] bg-blue-400 ml-1 align-middle animate-pulse" />
+      <span className="caret inline-block w-0.5 h-[1em] ml-1 align-middle" style={{ background: 'var(--accent)' }} />
     </span>
   );
 }

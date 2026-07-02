@@ -24,11 +24,12 @@ export default function ProductCard({ product, isSelected, onClick }: Props) {
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       onClick={onClick}
-      className={`glass-card p-4 cursor-pointer transition-all duration-200 ${
+      className="panel p-4 cursor-pointer"
+      style={
         isSelected
-          ? 'ring-2 ring-blue-500/60 bg-blue-500/10'
-          : 'hover:border-white/20'
-      }`}
+          ? { borderColor: 'var(--accent)', boxShadow: '0 0 0 1px var(--accent), var(--shadow-card)' }
+          : undefined
+      }
     >
       <div className="flex items-center gap-3">
         <span className="text-2xl">{icon}</span>
@@ -39,10 +40,10 @@ export default function ProductCard({ product, isSelected, onClick }: Props) {
           <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{product.category}</p>
         </div>
         <div className="text-right flex-shrink-0">
-          <p className="text-sm font-bold" style={{ color: 'var(--text-primary)' }}>
+          <p className="font-mono text-sm font-semibold" style={{ color: 'var(--ink)' }}>
             ${Number(product.currentPrice).toFixed(2)}
           </p>
-          <p className={`text-xs font-medium ${isUp ? 'text-green-400' : 'text-red-400'}`}>
+          <p className="font-mono text-xs font-medium" style={{ color: isUp ? 'var(--up)' : 'var(--down)' }}>
             {isUp ? '+' : ''}{priceDelta.toFixed(2)}
           </p>
         </div>

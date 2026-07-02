@@ -42,7 +42,7 @@ export default function ProductPanel({ products, selectedId, onSelect }: Props) 
       </div>
 
       {/* Selected product details */}
-      <div className="glass-card p-5 space-y-4">
+      <div className="panel p-5 space-y-4">
         <div className="flex items-start justify-between">
           <div>
             <p className="text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
@@ -54,45 +54,44 @@ export default function ProductPanel({ products, selectedId, onSelect }: Props) 
                 initial={{ opacity: 0, y: -8 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 8 }}
-                className="text-3xl font-bold mt-1"
-                style={{ color: 'var(--text-primary)' }}
+                className="font-mono text-3xl font-semibold mt-1"
+                style={{ color: 'var(--ink)' }}
               >
                 ${Number(selected.currentPrice).toFixed(2)}
               </motion.p>
             </AnimatePresence>
-            <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
-              Base: ${Number(selected.basePrice).toFixed(2)}
-              <span className={`ml-2 font-medium ${isUp ? 'text-green-400' : 'text-red-400'}`}>
+            <p className="font-mono text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
+              base ${Number(selected.basePrice).toFixed(2)}
+              <span className="ml-2 font-medium" style={{ color: isUp ? 'var(--up)' : 'var(--down)' }}>
                 {isUp ? '▲' : '▼'} {Math.abs(priceDelta).toFixed(2)}
               </span>
             </p>
           </div>
-          <span className="px-2 py-1 rounded-full text-xs font-medium bg-green-500/15 text-green-400">
+          <span
+            className="px-2 py-1 rounded-full text-xs font-mono font-medium"
+            style={{ background: 'var(--up-soft)', color: 'var(--up)' }}
+          >
             ACTIVE
           </span>
         </div>
 
         {/* Multiplier gauge */}
         <div>
-          <div className="flex justify-between text-xs mb-1" style={{ color: 'var(--text-muted)' }}>
-            <span>Multiplier</span>
-            <span className={Number(selected.priceMultiplier) >= 1 ? 'text-green-400' : 'text-red-400'}>
+          <div className="flex justify-between font-mono text-xs mb-1" style={{ color: 'var(--text-muted)' }}>
+            <span>MULTIPLIER</span>
+            <span style={{ color: Number(selected.priceMultiplier) >= 1 ? 'var(--up)' : 'var(--down)' }}>
               ×{Number(selected.priceMultiplier).toFixed(3)}
             </span>
           </div>
-          <div className="h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.08)' }}>
+          <div className="h-2 rounded-full overflow-hidden" style={{ background: 'var(--surface-2)', border: '1px solid var(--line)' }}>
             <motion.div
               className="h-full rounded-full"
-              style={{
-                background: Number(selected.priceMultiplier) >= 1
-                  ? 'linear-gradient(90deg, #22c55e, #3b82f6)'
-                  : 'linear-gradient(90deg, #ef4444, #f97316)',
-              }}
+              style={{ background: Number(selected.priceMultiplier) >= 1 ? 'var(--up)' : 'var(--down)' }}
               animate={{ width: `${Math.max(4, Math.min(100, multiplierPct))}%` }}
               transition={{ type: 'spring', damping: 20 }}
             />
           </div>
-          <div className="flex justify-between text-xs mt-1" style={{ color: 'var(--text-muted)', opacity: 0.5 }}>
+          <div className="flex justify-between font-mono text-[10px] mt-1" style={{ color: 'var(--text-muted)' }}>
             <span>0.50×</span>
             <span>1.00×</span>
             <span>2.00×</span>

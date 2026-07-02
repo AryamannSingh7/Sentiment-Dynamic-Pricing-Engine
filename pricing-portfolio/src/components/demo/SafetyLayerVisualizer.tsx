@@ -28,7 +28,7 @@ export default function SafetyLayerVisualizer({ lastTriggerTime }: Props) {
   }, [lastTriggerTime]);
 
   return (
-    <div className="glass-card p-4 space-y-2">
+    <div className="panel p-4 space-y-2">
       <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: 'var(--text-muted)' }}>
         Safety Layers
       </p>
@@ -43,22 +43,23 @@ export default function SafetyLayerVisualizer({ lastTriggerTime }: Props) {
                     key="check"
                     initial={{ scale: 0, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    className="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center"
+                    className="w-5 h-5 rounded-full flex items-center justify-center"
+                    style={{ background: 'var(--up-soft)' }}
                   >
-                    <span className="text-green-400 text-xs">✓</span>
+                    <span className="text-xs" style={{ color: 'var(--up)' }}>✓</span>
                   </motion.div>
                 ) : (
                   <motion.div
                     key="dot"
-                    className="w-5 h-5 rounded-full border border-white/10"
-                    style={{ background: 'rgba(255,255,255,0.03)' }}
+                    className="w-5 h-5 rounded-full border"
+                    style={{ background: 'var(--surface-2)', borderColor: 'var(--line)' }}
                   />
                 )}
               </AnimatePresence>
             </div>
             <div>
-              <p className={`text-xs font-medium transition-colors duration-300 ${active ? 'text-green-400' : ''}`}
-                 style={!active ? { color: 'var(--text-muted)' } : {}}>
+              <p className="text-xs font-medium transition-colors duration-300"
+                 style={{ color: active ? 'var(--up)' : 'var(--text-muted)' }}>
                 {layer.name}
               </p>
               <p className="text-xs mt-0.5" style={{ color: 'var(--text-muted)', opacity: 0.7 }}>

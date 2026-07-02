@@ -6,7 +6,7 @@ import PriceHistoryChart from '@/components/demo/PriceHistoryChart';
 import EventTriggerPanel from '@/components/demo/EventTriggerPanel';
 import AuditLogTable from '@/components/demo/AuditLogTable';
 import LoadingSkeleton from '@/components/ui/LoadingSkeleton';
-import GradientText from '@/components/ui/GradientText';
+import AccentText from '@/components/ui/AccentText';
 import { useProducts } from '@/hooks/useProducts';
 import { useAuditLog } from '@/hooks/useAuditLog';
 import { useDemoTrigger } from '@/hooks/useDemoTrigger';
@@ -56,7 +56,7 @@ export default function LiveDemoSection({ id }: Props) {
         {/* Heading */}
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold mb-3">
-            <GradientText>Live Demo</GradientText>
+            <AccentText>Live Demo</AccentText>
           </h2>
           <p className="text-base" style={{ color: 'var(--text-muted)', maxWidth: 520, margin: '0 auto' }}>
             Click any market event to trigger a real price adjustment through the full pricing engine.
@@ -79,8 +79,8 @@ export default function LiveDemoSection({ id }: Props) {
         )}
 
         {productsError && !productsLoading && (
-          <div className="glass-card p-8 text-center max-w-md mx-auto">
-            <p className="text-red-400 text-sm mb-2">Failed to connect to pricing engine</p>
+          <div className="panel p-8 text-center max-w-md mx-auto">
+            <p className="text-sm mb-2" style={{ color: 'var(--down)' }}>Failed to connect to pricing engine</p>
             <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{productsError}</p>
           </div>
         )}

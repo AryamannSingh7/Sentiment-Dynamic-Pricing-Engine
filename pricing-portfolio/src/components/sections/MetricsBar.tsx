@@ -29,10 +29,11 @@ export default function MetricsBar({ products, auditLogs }: Props) {
     return Object.entries(counts).sort((a, b) => b[1] - a[1])[0]?.[0] ?? '—';
   })();
 
+  const numberCls = 'font-mono text-xl font-semibold';
   const metrics = [
     {
       label: 'Total Adjustments',
-      value: <AnimatedNumber value={totalAdjustments} className="text-xl font-bold" />,
+      value: <AnimatedNumber value={totalAdjustments} className={numberCls} />,
     },
     {
       label: 'Avg Multiplier',
@@ -40,7 +41,7 @@ export default function MetricsBar({ products, auditLogs }: Props) {
         <AnimatedNumber
           value={avgMultiplier}
           format={(n) => `×${n.toFixed(3)}`}
-          className="text-xl font-bold"
+          className={numberCls}
         />
       ),
     },
@@ -50,30 +51,34 @@ export default function MetricsBar({ products, auditLogs }: Props) {
         <AnimatedNumber
           value={avgConfidence * 100}
           format={(n) => `${Math.round(n)}%`}
-          className="text-xl font-bold"
+          className={numberCls}
         />
       ),
     },
     {
       label: 'Top Signal',
-      value: <span className="text-sm font-semibold truncate max-w-[140px] block" style={{ color: 'var(--text-primary)' }}>{topSignal}</span>,
+      value: <span className="font-mono text-sm font-semibold truncate max-w-[140px] block" style={{ color: 'var(--ink)' }}>{topSignal}</span>,
     },
   ];
 
   return (
     <div
-      className="sticky top-0 z-40 border-b"
+      className="sticky top-[68px] z-40 border-b"
       style={{
-        background:   'rgba(10,10,15,0.85)',
-        backdropFilter: 'blur(20px)',
-        borderColor:  'var(--border-card)',
+        background:     'color-mix(in srgb, var(--surface) 85%, transparent)',
+        backdropFilter: 'blur(16px) saturate(140%)',
+        borderColor:    'var(--line)',
       }}
     >
       <div className="max-w-7xl mx-auto px-4 py-3 grid grid-cols-2 md:grid-cols-4 gap-4">
-        {metrics.map(m => (
-          <div key={m.label} className="flex flex-col items-center text-center">
+        {metrics.map((m, i) => (
+          <div
+            key={m.label}
+            className={`flex flex-col items-center text-center ${i > 0 ? 'md:border-l' : ''}`}
+            style={{ color: 'var(--ink)', borderColor: 'var(--line)' }}
+          >
             {m.value}
-            <p className="text-xs mt-0.5" style={{ color: 'var(--text-muted)' }}>{m.label}</p>
+            <p className="kicker mt-1">{m.label}</p>
           </div>
         ))}
       </div>

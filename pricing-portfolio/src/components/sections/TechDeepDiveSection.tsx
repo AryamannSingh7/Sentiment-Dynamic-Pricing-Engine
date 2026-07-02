@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import GradientText from '@/components/ui/GradientText';
+import AccentText from '@/components/ui/AccentText';
 
 const TABS = [
   {
@@ -87,7 +87,7 @@ export default function TechDeepDiveSection({ id }: { id?: string }) {
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold mb-3">
-            Tech <GradientText>Deep Dive</GradientText>
+            Tech <AccentText>Deep Dive</AccentText>
           </h2>
           <p style={{ color: 'var(--text-muted)' }} className="text-sm">
             The why behind every technology choice
@@ -100,12 +100,12 @@ export default function TechDeepDiveSection({ id }: { id?: string }) {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`px-4 py-2 rounded-xl text-xs font-medium border transition-all duration-200 ${
+              className="px-4 py-2 rounded-xl text-xs font-medium border transition-all duration-200"
+              style={
                 activeTab === tab.id
-                  ? 'bg-blue-500/20 border-blue-500/40 text-blue-400'
-                  : 'border-white/10 hover:border-white/20'
-              }`}
-              style={activeTab !== tab.id ? { color: 'var(--text-muted)' } : {}}
+                  ? { background: 'var(--accent-soft)', borderColor: 'var(--accent)', color: 'var(--accent)' }
+                  : { borderColor: 'var(--line)', color: 'var(--text-muted)' }
+              }
             >
               {tab.label}
             </button>
@@ -123,7 +123,7 @@ export default function TechDeepDiveSection({ id }: { id?: string }) {
             className="space-y-4"
           >
             {active.content.map(item => (
-              <div key={item.q} className="glass-card p-5">
+              <div key={item.q} className="panel p-5">
                 <p className="text-sm font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
                   {item.q}
                 </p>

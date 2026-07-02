@@ -1,11 +1,11 @@
-import GradientText from '@/components/ui/GradientText';
+import AccentText from '@/components/ui/AccentText';
 
 export default function VideoSection({ id }: { id?: string }) {
   return (
     <section id={id} className="py-24 px-4">
       <div className="max-w-4xl mx-auto text-center">
         <h2 className="text-3xl md:text-4xl font-bold mb-4">
-          See It In <GradientText>Action</GradientText>
+          See It In <AccentText>Action</AccentText>
         </h2>
         <p className="text-sm mb-10" style={{ color: 'var(--text-muted)' }}>
           A 2-minute walkthrough of the full end-to-end pipeline
@@ -13,7 +13,7 @@ export default function VideoSection({ id }: { id?: string }) {
 
         {/* Replace src with your YouTube/Loom embed URL */}
         <div
-          className="glass-card overflow-hidden mx-auto"
+          className="panel overflow-hidden mx-auto"
           style={{ maxWidth: 720, aspectRatio: '16/9', position: 'relative' }}
         >
           {/* Placeholder until video is recorded */}

@@ -18,14 +18,14 @@ export default function CooldownTimer({ seconds, total = 5 }: Props) {
         <circle
           cx="36" cy="36" r={r}
           fill="none"
-          stroke="rgba(255,255,255,0.08)"
+          stroke="var(--line)"
           strokeWidth="4"
         />
         {/* Progress */}
         <circle
           cx="36" cy="36" r={r}
           fill="none"
-          stroke="#3b82f6"
+          stroke="var(--accent)"
           strokeWidth="4"
           strokeLinecap="round"
           strokeDasharray={circumference}
@@ -38,9 +38,10 @@ export default function CooldownTimer({ seconds, total = 5 }: Props) {
           x="36" y="36"
           textAnchor="middle"
           dominantBaseline="central"
-          fill="#f1f5f9"
+          fill="var(--ink)"
           fontSize="14"
           fontWeight="600"
+          fontFamily="var(--font-mono), monospace"
         >
           {seconds}s
         </text>

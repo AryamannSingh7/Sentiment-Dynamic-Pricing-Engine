@@ -8,7 +8,7 @@ import PipelineSection from '@/components/sections/PipelineSection';
 import ArchitectureSection from '@/components/sections/ArchitectureSection';
 import TechDeepDiveSection from '@/components/sections/TechDeepDiveSection';
 import VideoSection from '@/components/sections/VideoSection';
-import InteractiveBackground from '@/components/ui/InteractiveBackground';
+import BackgroundGrid from '@/components/ui/BackgroundGrid';
 import { useProducts } from '@/hooks/useProducts';
 import { useAuditLog } from '@/hooks/useAuditLog';
 
@@ -19,7 +19,7 @@ function AppShell() {
 
   return (
     <>
-      <InteractiveBackground />
+      <BackgroundGrid />
       <main className="relative min-h-screen" style={{ zIndex: 1 }}>
         <Navbar />
         <HeroSection />

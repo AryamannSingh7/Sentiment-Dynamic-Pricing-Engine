@@ -20,7 +20,7 @@ export default function EventTriggerPanel({
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="glass-card p-4">
+      <div className="panel p-4">
         <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: 'var(--text-muted)' }}>
           Trigger Market Event
         </p>
