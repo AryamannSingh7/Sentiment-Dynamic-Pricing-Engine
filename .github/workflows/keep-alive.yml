@@ -1,0 +1,43 @@
+name: keep-alive
+
+# Keeps the free-tier services warm so the live demo doesn't go cold:
+#   • Render free web service spins down after ~15 min of no requests.
+#   • MongoDB Atlas M0 auto-pauses after ~60 days idle.
+# Pinging /actuator/health also runs the Mongo health check, so a single
+# request keeps BOTH the Render service warm and the Atlas cluster active.
+#
+# Interval is set to ~14 min — just under Render's 15-min idle window — to
+# use the fewest pings that still prevent spin-down.
+#
+# NOTE: GitHub Actions cron is best-effort and can be delayed several minutes
+# under load, so an occasional spin-down is still possible. If that matters,
+# point an external pinger (e.g. UptimeRobot, 5-min interval) at the same URL.
+
+on:
+  schedule:
+    - cron: '*/14 * * * *'
+  workflow_dispatch: {}
+
+concurrency:
+  group: keep-alive
+  cancel-in-progress: true
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    env:
+      HEALTH_URL: https://pricing-catalog-service.onrender.com/actuator/health
+    steps:
+      - name: Ping backend health (warms Render + keeps Atlas active)
+        run: |
+          for attempt in 1 2 3 4; do
+            code=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 120 "$HEALTH_URL" || echo 000)
+            if [ "$code" = "200" ]; then
+              echo "healthy (HTTP $code) on attempt $attempt"
+              exit 0
+            fi
+            echo "attempt $attempt: HTTP $code — service may be waking, retrying in 30s..."
+            sleep 30
+          done
+          echo "::error::health check did not return 200 after retries"
+          exit 1

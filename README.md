@@ -11,7 +11,7 @@
 
 > An event-driven, AI-powered pricing engine that ingests real-world market signals — Reddit discussions, tech news, competitor price changes — and automatically adjusts product prices using an LLM. Fully deployed and running autonomously.
 
-**[→ Live Demo](https://pricing-portfolio.vercel.app)**
+**[→ Live Demo](https://sentiment-dynamic-pricing-engine.vercel.app/)**
 
 ---
 
